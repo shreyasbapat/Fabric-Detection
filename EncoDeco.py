@@ -160,7 +160,7 @@ x_test = X_test.astype('float32') / 255.
 
 y_train = y_train.astype('float32') / 255.
 y_test = y_test.astype('float32') / 255.
-CheckDir = 'sample/'
+CheckDir = 'sample_final/'
 
 
 # In[ ]:
