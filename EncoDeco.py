@@ -179,7 +179,7 @@ for epoch in range(1,300):
         loss=autoencoder.train_on_batch(batch_train_X,batch_train_Y)
         print ('epoch_num: %d batch_num: %d loss: %f\n' % (epoch,batch,loss))
 
-    autoencoder.save_weights("fabric_autoen.h5")
+    autoencoder.save_weights("fabric_autoen_final.h5")
     encoder.save_weights("Only_Encoder.h5")
     if(epoch%2==0):
         x_test,y_test=shuffle(x_test,y_test)
