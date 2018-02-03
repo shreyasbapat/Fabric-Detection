@@ -23,7 +23,6 @@ from sklearn.utils import shuffle
 from sklearn.cross_validation import train_test_split
 import scipy.misc
 import cv2
-import theano
 import matplotlib.pyplot as plt
 import matplotlib
 from sklearn.metrics import classification_report,confusion_matrix
@@ -43,7 +42,7 @@ img_rows, img_cols = 128, 128
 enco = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
 enco = BatchNormalization()(enco)
 enco = Conv2D(16, (3, 3), activation='relu', padding='same')(enco)
-enco = BatchNormalization()(conv1)
+enco = BatchNormalization()(enco)
 enco = MaxPooling2D(pool_size=(2, 2))(enco)
    
 enco = Conv2D(32, (3, 3), activation='relu', padding='same')(enco)
@@ -63,13 +62,8 @@ enco = BatchNormalization()(enco)
 enco = Conv2D(128, (3, 3), activation='relu', padding='same')(enco)
 enco = BatchNormalization()(enco)
 enco = MaxPooling2D(pool_size=(2, 2))(enco)
-    
-enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
-enco = BatchNormalization()(enco)
-enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
-enco = BatchNormalization()(enco)
-
-enco.load_weights("Only_Encoder.h5")
+encoder = Model(input_img,enco)    
+encoder.load_weights("Only_Encoder.h5")
 
 classify = Flatten()(enco)
 classify = Dense(64, activation='relu')(classify)
@@ -96,9 +90,9 @@ batch_size1=64
 # In[ ]:
 
 
-for i in range(1,124):
+for i in range(1,2):
     path_major=path1+'/'+str(i)
-    for j in range(1,101):
+    for j in range(1,5):
         img=array(Image.open(path_major+"/"+str(j)+"_.jpg"))
         #print shape(img)
         img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
