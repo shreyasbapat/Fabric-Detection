@@ -30,7 +30,7 @@ input_img = Input(shape=(128,128,1))
 enco = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
 enco = BatchNormalization()(enco)
 enco = Conv2D(16, (3, 3), activation='relu', padding='same')(enco)
-enco = BatchNormalization()(conv1)
+enco = BatchNormalization()(enco)
 enco = MaxPooling2D(pool_size=(2, 2))(enco)
    
 enco = Conv2D(32, (3, 3), activation='relu', padding='same')(enco)
@@ -49,24 +49,24 @@ enco = Conv2D(128, (3, 3), activation='relu', padding='same')(enco)
 enco = BatchNormalization()(enco)
 enco = Conv2D(128, (3, 3), activation='relu', padding='same')(enco)
 enco = BatchNormalization()(enco)
-enco = MaxPooling2D(pool_size=(2, 2))(enco)
+#enco = MaxPooling2D(pool_size=(2, 2))(enco)
     
-enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
-enco = BatchNormalization()(enco)
-enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
-enco = BatchNormalization()(enco)
+#enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
+#enco = BatchNormalization()(enco)
+#enco = Conv2D(256, (3, 3), activation='relu', padding='same')(enco)
+#enco = BatchNormalization()(enco)
 
 
 # In[ ]:
 
 
-deco = UpSampling2D((2,2))(enco)
-deco = Conv2D(128, (3, 3), activation='relu', padding='same')(deco)
-deco = BatchNormalization()(deco)
-deco = Conv2D(128, (3, 3), activation='relu', padding='same')(deco)
-deco = BatchNormalization()(deco)
+#deco = UpSampling2D((2,2))(enco)
+#deco = Conv2D(128, (3, 3), activation='relu', padding='same')(deco)
+#deco = BatchNormalization()(deco)
+#deco = Conv2D(128, (3, 3), activation='relu', padding='same')(deco)
+#deco = BatchNormalization()(deco)
 
-deco = UpSampling2D((2,2))(deco)
+deco = UpSampling2D((2,2))(enco)
 deco = Conv2D(64, (3, 3), activation='relu', padding='same')(deco)
 deco = BatchNormalization()(deco)
 deco = Conv2D(64, (3, 3), activation='relu', padding='same')(deco)
@@ -160,7 +160,7 @@ x_test = X_test.astype('float32') / 255.
 
 y_train = y_train.astype('float32') / 255.
 y_test = y_test.astype('float32') / 255.
-CheckDir = 'sample_final/'
+CheckDir = 'sample/'
 
 
 # In[ ]:
@@ -179,9 +179,9 @@ for epoch in range(1,300):
         loss=autoencoder.train_on_batch(batch_train_X,batch_train_Y)
         print ('epoch_num: %d batch_num: %d loss: %f\n' % (epoch,batch,loss))
 
-    autoencoder.save_weights("fabric_autoen_final.h5")
-    encoder.save_weights("Only_Encoder.h5")
-    if(epoch%2==0):
+    autoencoder.save_weights("fabric_autoen_final_500.h5")
+    encoder.save_weights("Only_Encoder_500.h5")
+    if(epoch%1==0):
         x_test,y_test=shuffle(x_test,y_test)
         decoded_imgs=autoencoder.predict(x_test[:2])
         temp = np.zeros([128, 128*3,3])
