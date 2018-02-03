@@ -25,7 +25,7 @@ import scipy.misc
 import cv2
 import matplotlib.pyplot as plt
 import matplotlib
-from sklearn.metrics import classification_report,confusion_matrix
+#from sklearn.metrics import classification_report,confusion_matrix
 
 
 # In[ ]:
@@ -61,8 +61,9 @@ enco = Conv2D(128, (3, 3), activation='relu', padding='same')(enco)
 enco = BatchNormalization()(enco)
 enco = Conv2D(128, (3, 3), activation='relu', padding='same')(enco)
 enco = BatchNormalization()(enco)
-enco = MaxPooling2D(pool_size=(2, 2))(enco)
-encoder = Model(input_img,enco)    
+
+#enco.load_weights("Only_Encoder.h5")
+encoder = Model(input_img, enco)    
 encoder.load_weights("Only_Encoder.h5")
 
 classify = Flatten()(enco)
@@ -70,12 +71,17 @@ classify = Dense(64, activation='relu')(classify)
 classify = Dense(32, activation='relu')(classify)
 classify = Dense(num_classes, activation='softmax')(classify)
 
-network = Model(enco, classify)
-final_network = Model(input_img, classify)
+#network = Model(enco, classify)
+network = Model(input = input_img, output = classify)
 rms=RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.001)
+#network.compile(loss='mean_squared_error', optimizer=rms)
 network.compile(loss='mean_squared_error', optimizer=rms)
-final_network.compile(loss='mean_squared_error', optimizer=rms)
 
+for layers in encoder.layers:
+	layers.trainable=False
+
+#network.summary()
+#exit()
 
 # In[ ]:
 
@@ -90,9 +96,9 @@ batch_size1=64
 # In[ ]:
 
 
-for i in range(1,2):
+for i in range(1,124):
     path_major=path1+'/'+str(i)
-    for j in range(1,5):
+    for j in range(1,101):
         img=array(Image.open(path_major+"/"+str(j)+"_.jpg"))
         #print shape(img)
         img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
@@ -132,8 +138,8 @@ network.fit(x_train, y_train, validation_data=(x_test, y_test),batch_size=batch_
 scores = network.evaluate(x_test, y_test, verbose=0)
 print ("%s: %.2f%%" % (network.metrics_names[1], scores[1]*100))
 network.save_weights("only_classify.h5")
-final_network.fit(x_train, y_train, validation_data=(x_test, y_test),batch_size=batch_size1, nb_epoch=epochs, verbose=2)
-scores_final = final_network.evaluate(x_test, y_test, verbose=0)
-print ("%s: %.2f%%" % (final_network.metrics_names[1], scores_final[1]*100))
-final_network.save_weights("complete_model.h5")
+# final_network.fit(x_train, y_train, validation_data=(x_test, y_test),batch_size=batch_size1, nb_epoch=epochs, verbose=2)
+# scores_final = final_network.evaluate(x_test, y_test, verbose=0)
+# print ("%s: %.2f%%" % (final_network.metrics_names[1], scores_final[1]*100))
+# final_network.save_weights("complete_model.h5")
 
