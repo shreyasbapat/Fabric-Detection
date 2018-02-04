@@ -76,14 +76,14 @@ classify = Dense(num_classes, activation='softmax')(classify)
 network = Model(input_img, classify)
 rms=RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.001)
 #network.compile(loss='mean_squared_error', optimizer=rms)
-network.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+#network.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 #network.summary()
 for layers in encoder.layers:
-	layers.trainable=False
-
+	layers.trainable=True
+network.load_weights("only_classify.h5")
 #network.summary()
 #exit()
-
+network.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 # In[ ]:
 
 
@@ -140,7 +140,7 @@ x_test = X_test.astype('float32') / 255.
 network.fit(x_train, y_train, validation_data=(x_test, y_test),batch_size=batch_size1, nb_epoch=epochs, verbose=2)
 scores = network.evaluate(x_test, y_test, verbose=0)
 print ("%s: %.2f%%" % (network.metrics_names[1], scores[1]*100))
-network.save_weights("only_classify.h5")
+network.save_weights("Final_Model_Classifier.h5")
 # final_network.fit(x_train, y_train, validation_data=(x_test, y_test),batch_size=batch_size1, nb_epoch=epochs, verbose=2)
 # scores_final = final_network.evaluate(x_test, y_test, verbose=0)
 # print ("%s: %.2f%%" % (final_network.metrics_names[1], scores_final[1]*100))
