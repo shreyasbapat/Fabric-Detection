@@ -72,11 +72,11 @@ classify = Dense(32, activation='relu')(classify)
 classify = Dense(num_classes, activation='softmax')(classify)
 
 #network = Model(enco, classify)
-network = Model(input = input_img, output = classify)
+network = Model(input_img, classify)
 rms=RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.001)
 #network.compile(loss='mean_squared_error', optimizer=rms)
 network.compile(loss='mean_squared_error', optimizer=rms)
-
+#network.summary()
 for layers in encoder.layers:
 	layers.trainable=False
 
@@ -97,17 +97,17 @@ batch_size1=64
 
 
 for i in range(1,124):
-    path_major=path1+'/'+str(i)
+    path_major=path+'/'+str(i)
     for j in range(1,101):
         img=array(Image.open(path_major+"/"+str(j)+"_.jpg"))
         #print shape(img)
         img = cv2.cvtColor( img, cv2.COLOR_RGB2GRAY )
         img=img.reshape(128,128,1)
         basic_mat.append(img)
-        #tobe_mat.append(img)
-    #index[i]=i
-    index.append(i)
-
+        index.append(i)
+		
+    
+network.summary()
 
 # In[ ]:
 
